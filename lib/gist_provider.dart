@@ -1,3 +1,5 @@
+// gist_provider.dart
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
@@ -5,15 +7,15 @@ import 'models/gist_model.dart';
 
 class GistProvider with ChangeNotifier {
   List<Gist> _gists = [];
+  List<Gist> _filteredGists = [];
   bool _isLoading = false;
   String _errorMessage = '';
 
-  List<Gist> get gists => _gists;
+  List<Gist> get gists => _filteredGists;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
 
   Future<void> fetchGists() async {
-    print('fetchGists called');
     _isLoading = true;
     _errorMessage = '';
     notifyListeners();
@@ -21,8 +23,6 @@ class GistProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
     String? token = prefs.getString('token');
-
-    print('Username: $username, Token: $token');
 
     if (username != null && token != null) {
       try {
@@ -39,6 +39,7 @@ class GistProvider with ChangeNotifier {
             createdAt: gist.createdAt,
           );
         }));
+        _filteredGists = _gists;
       } catch (e) {
         _errorMessage = e.toString();
       }
@@ -50,10 +51,35 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void searchGists(String query) {
+    final lowerCaseQuery = query.toLowerCase();
+    _filteredGists = _gists
+        .where((gist) =>
+            gist.filename.toLowerCase().contains(lowerCaseQuery) ||
+            (gist.description?.toLowerCase().contains(lowerCaseQuery) ??
+                false) ||
+            gist.content.toLowerCase().contains(lowerCaseQuery))
+        .toList();
+    notifyListeners();
+  }
+
+  void sortGistsByFilename(bool ascending) {
+    _filteredGists.sort((a, b) => ascending
+        ? a.filename.compareTo(b.filename)
+        : b.filename.compareTo(a.filename));
+    notifyListeners();
+  }
+
+  void sortGistsByDate(bool ascending) {
+    _filteredGists.sort((a, b) => ascending
+        ? a.createdAt.compareTo(b.createdAt)
+        : b.createdAt.compareTo(a.createdAt));
+    notifyListeners();
+  }
+
   void saveCredentials(String username, String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
     await prefs.setString('token', token);
-    print('Credentials saved: $username, $token');
   }
 }
