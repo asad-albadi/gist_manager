@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:_mobile_app_to_lookup_and_search_gists/gist_provider.dart';
 import 'package:_mobile_app_to_lookup_and_search_gists/screens/gist_detail_screen.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/screens/settings_screen.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/screens/settings_screen.dart'; // Import settings screen
 
 class GistListScreen extends StatefulWidget {
   @override
@@ -29,6 +29,19 @@ class _GistListScreenState extends State<GistListScreen> {
     });
   }
 
+  void _showSettingsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          child: const SettingsDialog(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +57,7 @@ class _GistListScreenState extends State<GistListScreen> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsScreen()),
-              );
+              _showSettingsDialog(context);
             },
           ),
         ],
@@ -129,9 +139,8 @@ class _GistListScreenState extends State<GistListScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    GistDetailScreen(gist: gist),
-                              ),
+                                  builder: (context) =>
+                                      GistDetailScreen(gist: gist)),
                             );
                           },
                         ),
