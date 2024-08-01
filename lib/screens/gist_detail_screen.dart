@@ -59,70 +59,81 @@ class CodeElementBuilder extends MarkdownElementBuilder {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 4.0),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.primary),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.5),
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(4.0),
                       topRight: Radius.circular(4.0),
                     ),
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.primary),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SelectableText(
-                        (element.attributes['class'] ?? "-")
-                            .toString()
-                            .split('-')[1],
-                        style: TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 12.0,
-                          color: Theme.of(context).colorScheme.onSurface,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4.0),
+                            topRight: Radius.circular(4.0),
+                          ),
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SelectableText(
+                              (element.attributes['class'] ?? "-")
+                                  .toString()
+                                  .split('-')[1],
+                              style: TextStyle(
+                                fontFamily: 'monospace',
+                                fontSize: 12.0,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.copy, size: 16.0),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: element.textContent));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: SelectableText(
+                                        'Code copied to clipboard',
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
+                                      ),
+                                      backgroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .background),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.copy, size: 16.0),
-                        onPressed: () {
-                          Clipboard.setData(
-                              ClipboardData(text: element.textContent));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: SelectableText(
-                                  'Code copied to clipboard',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.background),
-                          );
-                        },
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SelectableText(
+                            element.textContent,
+                            style: const TextStyle(
+                              fontFamily: 'monospace',
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(4.0),
-                      bottomRight: Radius.circular(4.0),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: SelectableText(
-                      element.textContent,
-                      style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 14.0,
-                      ),
-                    ),
                   ),
                 ),
               ],
