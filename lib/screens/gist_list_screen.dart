@@ -1,17 +1,18 @@
 // gist_list_screen.dart
 
 import 'package:_mobile_app_to_lookup_and_search_gists/main.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/providers/gist_provider.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/providers/user_provider.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/screens/gist_detail_screen.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/gist_provider.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/screens/gist_detail_screen.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/screens/settings_screen.dart'; // Import settings screen
+import 'package:url_launcher/url_launcher.dart';
 
 class GistListScreen extends StatefulWidget {
   const GistListScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _GistListScreenState createState() => _GistListScreenState();
 }
 
@@ -24,6 +25,8 @@ class _GistListScreenState extends State<GistListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GistProvider>(context, listen: false).fetchGists();
+      Provider.of<UserProvider>(context, listen: false)
+          .fetchUserProfile(); // Fetch user profile
     });
   }
 
@@ -50,12 +53,53 @@ class _GistListScreenState extends State<GistListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gists'),
+        title: Column(
+          children: [
+            Consumer<UserProvider>(
+              builder: (context, userProvider, _) {
+                if (userProvider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (userProvider.errorMessage.isNotEmpty) {
+                  return Center(
+                      child: Text('Error: ${userProvider.errorMessage}'));
+                } else if (userProvider.user != null) {
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(userProvider.user!.avatarUrl),
+                    ),
+                    title: Text(userProvider.user!.login),
+                    subtitle: GestureDetector(
+                      onTap: () async {
+                        if (await canLaunch(userProvider.user!.htmlUrl)) {
+                          await launch(userProvider.user!.htmlUrl);
+                        } else {
+                          throw 'Could not launch ${userProvider.user!.htmlUrl}';
+                        }
+                      },
+                      child: Text(
+                        userProvider.user!.htmlUrl,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
               Provider.of<GistProvider>(context, listen: false).fetchGists();
+              Provider.of<UserProvider>(context, listen: false)
+                  .fetchUserProfile(); // Fetch user profile
             },
           ),
           IconButton(

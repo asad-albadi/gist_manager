@@ -3,7 +3,7 @@
 import 'package:_mobile_app_to_lookup_and_search_gists/screens/credentials_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/settings_provider.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/providers/settings_provider.dart';
 
 class SettingsDialog extends StatelessWidget {
   const SettingsDialog({super.key});

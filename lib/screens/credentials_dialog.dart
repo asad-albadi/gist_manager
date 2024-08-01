@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../gist_provider.dart';
+import '../providers/gist_provider.dart';
 
 class CredentialsDialog extends StatelessWidget {
   const CredentialsDialog({super.key});
