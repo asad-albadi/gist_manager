@@ -37,6 +37,7 @@ class GistProvider with ChangeNotifier {
             description: gist.description,
             content: content,
             createdAt: gist.createdAt,
+            url: gist.url,
           );
         }));
         _filteredGists = _gists;

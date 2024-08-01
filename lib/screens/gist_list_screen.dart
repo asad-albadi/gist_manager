@@ -1,5 +1,6 @@
 // gist_list_screen.dart
 
+import 'package:_mobile_app_to_lookup_and_search_gists/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:_mobile_app_to_lookup_and_search_gists/gist_provider.dart';
@@ -7,12 +8,15 @@ import 'package:_mobile_app_to_lookup_and_search_gists/screens/gist_detail_scree
 import 'package:_mobile_app_to_lookup_and_search_gists/screens/settings_screen.dart'; // Import settings screen
 
 class GistListScreen extends StatefulWidget {
+  const GistListScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _GistListScreenState createState() => _GistListScreenState();
 }
 
 class _GistListScreenState extends State<GistListScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   bool _sortAscending = true;
 
   @override
@@ -123,7 +127,18 @@ class _GistListScreenState extends State<GistListScreen> {
                         margin: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
                         child: ListTile(
-                          title: Text(gist.filename.split('.md')[0]),
+                          title: Row(
+                            children: [
+                              Text(gist.filename.split('.md')[0]),
+                              IconButton(
+                                tooltip: "Click here to go to: ${gist.url}",
+                                icon: const Icon(Icons.link, size: 18.0),
+                                onPressed: () {
+                                  launchURL(gist.url);
+                                },
+                              )
+                            ],
+                          ),
                           subtitle: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
