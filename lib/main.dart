@@ -1,4 +1,5 @@
 import 'package:_mobile_app_to_lookup_and_search_gists/gist_provider.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/models/colors.dart';
 import 'package:_mobile_app_to_lookup_and_search_gists/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {
           return MaterialApp(
-            theme: settings.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+            theme: settings.isDarkMode ? darkTheme : lightTheme,
             home: GistListScreen(),
           );
         },
