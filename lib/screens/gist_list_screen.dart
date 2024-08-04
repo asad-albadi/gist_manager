@@ -5,6 +5,7 @@ import 'package:_mobile_app_to_lookup_and_search_gists/providers/gist_provider.d
 import 'package:_mobile_app_to_lookup_and_search_gists/providers/user_provider.dart';
 import 'package:_mobile_app_to_lookup_and_search_gists/screens/gist_detail_screen.dart';
 import 'package:_mobile_app_to_lookup_and_search_gists/screens/settings_screen.dart';
+import 'package:_mobile_app_to_lookup_and_search_gists/widgets/custom_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -47,6 +48,130 @@ class _GistListScreenState extends State<GistListScreen> {
         );
       },
     );
+  }
+
+  List<Widget> tagList(String filename, String content) {
+    List<Widget> tags = [];
+    List<Map<String, dynamic>> tagCriteria = [
+      {
+        'name': 'Containerization',
+        'color': Colors.blueAccent,
+        'keywords': ['docker', 'k8s', 'kubernetes', 'container']
+      },
+      {
+        'name': 'Game Development',
+        'color': Colors.lightGreen,
+        'keywords': [
+          'godot',
+          'unity3d',
+          'game development',
+        ]
+      },
+      {
+        'name': 'Operating Systems',
+        'color': Colors.amber,
+        'keywords': [
+          'linux',
+          'windows',
+          'macos',
+          'ubuntu',
+          'fedora',
+          'debian',
+          'pop!_os',
+          'archlinux',
+          'arch linux'
+        ]
+      },
+      {
+        'name': 'Cloud Computing',
+        'color': Colors.lightBlueAccent,
+        'keywords': [
+          'cloud',
+          'aws',
+          'azure',
+          'gcp',
+          'google cloud',
+          'amazon web services'
+        ]
+      },
+      /*   {
+        'name': 'Programming Languages',
+        'color': Colors.green,
+        'keywords': [
+          'python',
+          '.py',
+          'java',
+          '.java',
+          'dart',
+          'flutter',
+          'rust',
+          '.rs',
+          'c++',
+          '.cpp',
+          'c#',
+          '.cs'
+        ]
+      }, */
+      {
+        'name': 'Data Science',
+        'color': Colors.deepOrange,
+        'keywords': [
+          'data science',
+          'data analysis',
+          'pandas',
+          'numpy',
+          'machine learning',
+          'artificial intelligence'
+        ]
+      },
+      {
+        'name': 'DevOps',
+        'color': Colors.blueAccent,
+        'keywords': [
+          'devops',
+          'ci/cd',
+          'continuous integration',
+          'continuous deployment'
+        ]
+      },
+      {
+        'name': 'Security',
+        'color': Colors.redAccent,
+        'keywords': ['security', 'cybersecurity', 'infosec']
+      },
+      {
+        'name': 'Networking',
+        'color': Colors.deepPurpleAccent,
+        'keywords': ['networking', 'network', 'tcp/ip', 'dns']
+      },
+      {
+        'name': 'Homelab',
+        'color': Colors.black,
+        'keywords': ['homelab']
+      },
+      {
+        'name': 'IoT',
+        'color': Colors.blueAccent,
+        'keywords': ['home assistant', 'mqtt']
+      },
+      {
+        'name': 'Electronics',
+        'color': Colors.blueAccent,
+        'keywords': ['pcb', 'sensor', 'arduino', '3d print', 'microcontroller']
+      }
+    ];
+
+    for (var tag in tagCriteria) {
+      for (var keyword in tag['keywords']) {
+        if (filename.toLowerCase().contains(keyword) ||
+            content.toLowerCase().contains(keyword)) {
+          tags.add(CustomTag(name: tag['name'], color: tag['color']));
+          break; // Avoid adding the same tag multiple times
+        }
+      }
+    }
+
+    return tags;
   }
 
   @override
@@ -187,10 +312,14 @@ class _GistListScreenState extends State<GistListScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              gist.filename.split('.md')[0] ==
+                              /*  gist.filename.split('.md')[0] ==
                                       gist.description.toString()
                                   ? const Text('')
-                                  : Text(gist.description ?? ''),
+                                  : Text(gist.description ?? ''), */
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: tagList(gist.filename, gist.content),
+                              ),
                               Text(gist.createdAt),
                             ],
                           ),
