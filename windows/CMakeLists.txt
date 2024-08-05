@@ -1,10 +1,10 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
-project(_mobile_app_to_lookup_and_search_gists LANGUAGES CXX)
+project(gist_manager LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "_mobile_app_to_lookup_and_search_gists")
+set(BINARY_NAME "gist_manager")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

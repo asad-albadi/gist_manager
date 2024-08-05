@@ -1,11 +1,11 @@
 // gist_list_screen.dart
 
-import 'package:_mobile_app_to_lookup_and_search_gists/main.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/providers/gist_provider.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/providers/user_provider.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/screens/gist_detail_screen.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/screens/settings_screen.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/widgets/custom_tag.dart';
+import 'package:gist_manager/main.dart';
+import 'package:gist_manager/providers/gist_provider.dart';
+import 'package:gist_manager/providers/user_provider.dart';
+import 'package:gist_manager/screens/gist_detail_screen.dart';
+import 'package:gist_manager/screens/settings_screen.dart';
+import 'package:gist_manager/widgets/custom_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';

@@ -1,4 +1,4 @@
-# _mobile_app_to_lookup_and_search_gists
+# gist_manager
 
 A new Flutter project.
 

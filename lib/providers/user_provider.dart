@@ -1,7 +1,7 @@
 // user_provider.dart
 
-import 'package:_mobile_app_to_lookup_and_search_gists/models/user_model.dart';
-import 'package:_mobile_app_to_lookup_and_search_gists/services/api_service.dart';
+import 'package:gist_manager/models/user_model.dart';
+import 'package:gist_manager/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

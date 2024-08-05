@@ -1,6 +1,6 @@
 // gist_detail_screen.dart
 
-import 'package:_mobile_app_to_lookup_and_search_gists/main.dart';
+import 'package:gist_manager/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
