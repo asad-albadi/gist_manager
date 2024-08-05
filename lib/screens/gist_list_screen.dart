@@ -3,6 +3,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:gist_manager/main.dart';
 import 'package:gist_manager/providers/gist_provider.dart';
+import 'package:gist_manager/providers/hover_change_image.dart';
 import 'package:gist_manager/providers/user_provider.dart';
 import 'package:gist_manager/screens/credentials_dialog.dart';
 import 'package:gist_manager/screens/gist_detail_screen.dart';
@@ -190,10 +191,9 @@ class _GistListScreenState extends State<GistListScreen> {
                   return Center(child: Text(userProvider.errorMessage));
                 } else if (userProvider.user != null) {
                   return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(userProvider.user!.avatarUrl),
-                    ),
+                    leading: HoverChangeImage(
+                        assetImageUrl: 'assets/logo.png',
+                        networkImageUrl: userProvider.user!.avatarUrl),
                     title: Text(userProvider.user!.login),
                     subtitle: GestureDetector(
                       onTap: () async {
