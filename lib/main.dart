@@ -30,6 +30,8 @@ class MyApp extends StatelessWidget {
       child: Consumer<SettingsProvider>(
         builder: (context, settings, _) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: "Gist Manager",
             theme: settings.isDarkMode ? darkTheme : lightTheme,
             home: const GistListScreen(),
           );
