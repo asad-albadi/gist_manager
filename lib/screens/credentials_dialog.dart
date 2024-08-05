@@ -31,6 +31,12 @@ class _CredentialsDialogState extends State<CredentialsDialog> {
             decoration: const InputDecoration(labelText: 'Access Token'),
             obscureText: true,
           ),
+          const SizedBox(height: 8),
+          const Text(
+            'To create a personal access token (classic), go to GitHub settings, navigate to Developer settings, '
+            'and create a new token with gist permissions.',
+            style: TextStyle(fontSize: 12, color: Colors.grey),
+          ),
         ],
       ),
       actions: [
