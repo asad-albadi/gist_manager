@@ -78,7 +78,7 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void saveCredentials(String username, String token) async {
+  Future<void> saveCredentials(String username, String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
     await prefs.setString('token', token);

@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:gist_manager/main.dart';
 import 'package:gist_manager/providers/gist_provider.dart';
 import 'package:gist_manager/providers/user_provider.dart';
+import 'package:gist_manager/screens/credentials_dialog.dart';
 import 'package:gist_manager/screens/gist_detail_screen.dart';
 import 'package:gist_manager/screens/settings_screen.dart';
 import 'package:gist_manager/widgets/custom_tag.dart';
@@ -186,8 +187,7 @@ class _GistListScreenState extends State<GistListScreen> {
                 if (userProvider.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (userProvider.errorMessage.isNotEmpty) {
-                  return Center(
-                      child: Text('Error: ${userProvider.errorMessage}'));
+                  return Center(child: Text(userProvider.errorMessage));
                 } else if (userProvider.user != null) {
                   return ListTile(
                     leading: CircleAvatar(
@@ -314,7 +314,21 @@ class _GistListScreenState extends State<GistListScreen> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (gistProvider.errorMessage.isNotEmpty) {
                   return Center(
-                      child: Text('Error: ${gistProvider.errorMessage}'));
+                    child: Column(
+                      children: [
+                        Text(gistProvider.errorMessage),
+                        ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => const CredentialsDialog(),
+                            );
+                          },
+                          child: const Text('Update Credentials'),
+                        ),
+                      ],
+                    ),
+                  );
                 } else if (gistProvider.gists.isEmpty) {
                   return const Center(child: Text('No gists found.'));
                 } else {
