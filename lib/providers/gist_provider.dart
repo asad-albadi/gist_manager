@@ -27,7 +27,7 @@ class GistProvider with ChangeNotifier {
     if (username != null && token != null) {
       try {
         List<Gist> fetchedGists =
-            await ApiService().fetchGists(username, token);
+            await ApiService().fetchAllGists(username, token);
         _gists = await Future.wait(fetchedGists.map((gist) async {
           String content =
               await ApiService().fetchGistContent(username, token, gist.id);

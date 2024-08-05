@@ -6,7 +6,7 @@ class Gist {
   final String? description;
   final String content;
   final String createdAt;
-  final String url; // Add the URL field
+  final String url;
 
   Gist({
     required this.id,
@@ -14,7 +14,7 @@ class Gist {
     this.description,
     required this.content,
     required this.createdAt,
-    required this.url, // Initialize the URL field
+    required this.url,
   });
 
   factory Gist.fromJson(Map<String, dynamic> json) {
@@ -24,7 +24,7 @@ class Gist {
       description: json['description'] ?? 'No description',
       content: json['files'].values.first['content'] ?? 'No content',
       createdAt: json['created_at'] ?? 'Unknown date',
-      url: json['html_url'], // Parse the URL field
+      url: json['html_url'],
     );
   }
 }

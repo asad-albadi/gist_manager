@@ -8,9 +8,10 @@ import '../models/user_model.dart'; // Import the user model
 class ApiService {
   final String baseUrl = "https://api.github.com";
 
-  Future<List<Gist>> fetchGists(String username, String token) async {
+  Future<List<Gist>> fetchGists(String username, String token,
+      {int page = 1, int perPage = 30}) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/users/$username/gists'),
+      Uri.parse('$baseUrl/users/$username/gists?page=$page&per_page=$perPage'),
       headers: {
         'Authorization': 'token $token',
       },
@@ -24,6 +25,24 @@ class ApiService {
     } else {
       throw Exception('Failed to load gists');
     }
+  }
+
+  Future<List<Gist>> fetchAllGists(String username, String token) async {
+    int page = 1;
+    int perPage = 30;
+    List<Gist> allGists = [];
+
+    while (true) {
+      List<Gist> gists =
+          await fetchGists(username, token, page: page, perPage: perPage);
+      if (gists.isEmpty) {
+        break;
+      }
+      allGists.addAll(gists);
+      page++;
+    }
+
+    return allGists;
   }
 
   Future<User> fetchUserProfile(String username, String token) async {
