@@ -16,10 +16,8 @@ Gist Manager is a Flutter application that allows you to manage your GitHub gist
 ### Light Theme
 ![image](https://github.com/user-attachments/assets/4e50d8cd-5494-49f6-ac49-c3949215b9c9)
 
-
 ### Dark Theme
 ![image](https://github.com/user-attachments/assets/855b132e-41f8-4e35-baea-448868c15462)
-
 
 ## Installation
 
@@ -79,7 +77,7 @@ Gist Manager is a Flutter application that allows you to manage your GitHub gist
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
