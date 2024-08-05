@@ -92,7 +92,3 @@ This project is licensed under the Creative Commons Attribution-NonCommercial 4.
 - [Dracula Theme](https://draculatheme.com/) for the beautiful color palette.
 - [Flutter](https://flutter.dev/) for the awesome framework.
 - [GitHub API](https://developer.github.com/v3/gists/) for the backend support.
-
-## Contact
-
-For any issues or inquiries, please contact [your-email@example.com].
