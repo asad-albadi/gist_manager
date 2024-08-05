@@ -17,11 +17,19 @@ class GistDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: SelectableText(
-        gist.filename,
-        onTap: () {
-          launchURL(gist.url);
-        },
+          title: Row(
+        children: [
+          SelectableText(
+            gist.filename,
+          ),
+          IconButton(
+            tooltip: "Click here to go to: ${gist.url}",
+            icon: const Icon(Icons.link, size: 18.0),
+            onPressed: () {
+              launchURL(gist.url);
+            },
+          ),
+        ],
       )),
       body: Markdown(
         data: gist.content,
