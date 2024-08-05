@@ -293,36 +293,13 @@ class _GistListScreenState extends State<GistListScreen> {
                     itemBuilder: (context, index) {
                       final gist = gistProvider.gists[index];
                       return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
                         margin: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 16),
-                        child: ListTile(
-                          title: Row(
-                            children: [
-                              Text(gist.filename.split('.md')[0]),
-                              IconButton(
-                                tooltip: "Click here to go to: ${gist.url}",
-                                icon: const Icon(Icons.link, size: 18.0),
-                                onPressed: () {
-                                  launchURL(gist.url);
-                                },
-                              )
-                            ],
-                          ),
-                          subtitle: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              /*  gist.filename.split('.md')[0] ==
-                                      gist.description.toString()
-                                  ? const Text('')
-                                  : Text(gist.description ?? ''), */
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: tagList(gist.filename, gist.content),
-                              ),
-                              Text(gist.createdAt),
-                            ],
-                          ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16.0),
                           onTap: () {
                             Navigator.push(
                               context,
@@ -331,6 +308,37 @@ class _GistListScreenState extends State<GistListScreen> {
                                       GistDetailScreen(gist: gist)),
                             );
                           },
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(gist.filename.split('.md')[0]),
+                                ),
+                                IconButton(
+                                  tooltip: "Click here to go to: ${gist.url}",
+                                  icon: const Icon(Icons.link, size: 18.0),
+                                  onPressed: () {
+                                    launchURL(gist.url);
+                                  },
+                                )
+                              ],
+                            ),
+                            subtitle: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                /* gist.filename.split('.md')[0] == gist.description.toString()
+                  ? const Text('')
+                  : Text(gist.description ?? ''), */
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children:
+                                      tagList(gist.filename, gist.content),
+                                ),
+                                Text(gist.createdAt),
+                              ],
+                            ),
+                          ),
                         ),
                       );
                     },
