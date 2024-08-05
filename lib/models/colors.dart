@@ -36,26 +36,26 @@ final ThemeData darkTheme = ThemeData(
   ),
   scaffoldBackgroundColor: DraculaPalette.background,
   appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFF44475A),
-    foregroundColor: Color(0xFFF8F8F2),
+    backgroundColor: DraculaPalette.currentLine,
+    foregroundColor: DraculaPalette.foreground,
   ),
   colorScheme: const ColorScheme.dark(
-    primary: Color(0xFF6272A4), // Comment color for less emphasis
-    secondary: Color(0xFFFF79C6), // Pink for accents
-    surface: Color(0xFF44475A), // Current line and selections
-    background: Color(0xFF282A36), // Main background
-    onPrimary: Color(0xFFF8F8F2),
-    onSecondary: Color(0xFF282A36),
+    primary: DraculaPalette.comment,
+    secondary: DraculaPalette.pink,
+    surface: DraculaPalette.currentLine,
+    background: DraculaPalette.background,
+    onPrimary: DraculaPalette.foreground,
+    onSecondary: DraculaPalette.background,
   ),
   textTheme: const TextTheme(
-    bodyLarge: TextStyle(color: Color(0xFFF8F8F2)), // Foreground
-    bodyMedium: TextStyle(color: Color.fromARGB(255, 200, 204, 219)), // Comment
-    displayLarge: TextStyle(color: Color(0xFF50FA7B)), // Green
-    titleMedium: TextStyle(color: Color(0xFF8BE9FD)), // Cyan
+    bodyLarge: TextStyle(color: DraculaPalette.foreground),
+    bodyMedium: TextStyle(color: DraculaPalette.foreground),
+    displayLarge: TextStyle(color: DraculaPalette.green),
+    titleMedium: TextStyle(color: DraculaPalette.cyan),
   ),
   buttonTheme: const ButtonThemeData(
-    buttonColor: Color(0xFFFF5555), // Red for buttons
-    textTheme: ButtonTextTheme.primary,
+    buttonColor: DraculaPalette.red,
+    textTheme: ButtonTextTheme.normal,
   ),
 );
 
@@ -67,25 +67,25 @@ final ThemeData lightTheme = ThemeData(
   ),
   scaffoldBackgroundColor: LightDraculaPalette.background,
   appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFFE6E6E6),
-    foregroundColor: Color(0xFF282A36),
+    backgroundColor: LightDraculaPalette.currentLine,
+    foregroundColor: LightDraculaPalette.foreground,
   ),
   colorScheme: const ColorScheme.light(
-    primary: Color(0xFFB6B6B6), // Comment color for less emphasis
-    secondary: Color(0xFFFF69B4), // Pink for accents
-    surface: Color(0xFFE6E6E6), // Current line and selections
-    background: Color(0xFFF8F8F2), // Main background
-    onPrimary: Color(0xFF282A36),
-    onSecondary: Color(0xFFF8F8F2),
+    primary: LightDraculaPalette.comment,
+    secondary: LightDraculaPalette.pink,
+    surface: LightDraculaPalette.currentLine,
+    background: LightDraculaPalette.background,
+    onPrimary: LightDraculaPalette.foreground,
+    onSecondary: LightDraculaPalette.background,
   ),
   textTheme: const TextTheme(
-    bodyLarge: TextStyle(color: Color(0xFF282A36)), // Foreground
-    bodyMedium: TextStyle(color: Color(0xFFB6B6B6)), // Comment
-    displayLarge: TextStyle(color: Color(0xFF3CB371)), // Green
-    titleMedium: TextStyle(color: Color(0xFF00BFC2)), // Cyan
+    bodyLarge: TextStyle(color: LightDraculaPalette.foreground),
+    bodyMedium: TextStyle(color: LightDraculaPalette.foreground),
+    displayLarge: TextStyle(color: LightDraculaPalette.green),
+    titleMedium: TextStyle(color: LightDraculaPalette.cyan),
   ),
   buttonTheme: const ButtonThemeData(
-    buttonColor: Color(0xFFDC143C), // Red for buttons
+    buttonColor: LightDraculaPalette.red,
     textTheme: ButtonTextTheme.primary,
   ),
 );

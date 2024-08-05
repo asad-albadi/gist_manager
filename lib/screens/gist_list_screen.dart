@@ -1,5 +1,6 @@
 // gist_list_screen.dart
 
+import 'package:flutter/rendering.dart';
 import 'package:gist_manager/main.dart';
 import 'package:gist_manager/providers/gist_provider.dart';
 import 'package:gist_manager/providers/user_provider.dart';
@@ -239,43 +240,72 @@ class _GistListScreenState extends State<GistListScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (query) {
-                Provider.of<GistProvider>(context, listen: false)
-                    .searchGists(query);
-              },
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (query) {
+                      Provider.of<GistProvider>(context, listen: false)
+                          .searchGists(query);
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Provider.of<GistProvider>(context, listen: false)
+                          .sortGistsByFilename(_sortAscending);
+                      _toggleSortOrder();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.text_format),
+                        Icon(_sortAscending
+                            ? Icons.arrow_upward
+                            : Icons.arrow_downward)
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Provider.of<GistProvider>(context, listen: false)
+                          .sortGistsByDate(_sortAscending);
+                      _toggleSortOrder();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_month),
+                        Icon(_sortAscending
+                            ? Icons.arrow_upward
+                            : Icons.arrow_downward)
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Provider.of<GistProvider>(context, listen: false)
-                      .sortGistsByFilename(_sortAscending);
-                  _toggleSortOrder();
-                },
-                child: Text(_sortAscending
-                    ? 'Sort by Filename Asc'
-                    : 'Sort by Filename Desc'),
-              ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Provider.of<GistProvider>(context, listen: false)
-                      .sortGistsByDate(_sortAscending);
-                  _toggleSortOrder();
-                },
-                child: Text(
-                    _sortAscending ? 'Sort by Date Asc' : 'Sort by Date Desc'),
-              ),
-            ],
           ),
           Expanded(
             child: Consumer<GistProvider>(
@@ -320,22 +350,22 @@ class _GistListScreenState extends State<GistListScreen> {
                                   onPressed: () {
                                     launchURL(gist.url);
                                   },
-                                )
+                                ),
+                                Text(gist.createdAt),
                               ],
                             ),
-                            subtitle: Row(
+                            subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                /* gist.filename.split('.md')[0] == gist.description.toString()
-                  ? const Text('')
-                  : Text(gist.description ?? ''), */
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                if (gist.filename.split('.md')[0] !=
+                                    gist.description.toString())
+                                  Text(gist.description ?? ''),
+                                Wrap(
+                                  spacing: 8.0,
+                                  runSpacing: 4.0,
                                   children:
                                       tagList(gist.filename, gist.content),
                                 ),
-                                Text(gist.createdAt),
                               ],
                             ),
                           ),
