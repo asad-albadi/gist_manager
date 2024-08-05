@@ -29,7 +29,7 @@ class LightDraculaPalette {
 }
 
 final ThemeData darkTheme = ThemeData(
-  cardTheme: const CardTheme(elevation: 0),
+  cardTheme: const CardTheme(elevation: 10),
   brightness: Brightness.dark,
   navigationRailTheme: const NavigationRailThemeData(
     elevation: 0,
@@ -60,7 +60,7 @@ final ThemeData darkTheme = ThemeData(
 );
 
 final ThemeData lightTheme = ThemeData(
-  cardTheme: const CardTheme(elevation: 0),
+  cardTheme: const CardTheme(elevation: 10),
   brightness: Brightness.light,
   navigationRailTheme: const NavigationRailThemeData(
     elevation: 0,
