@@ -1,15 +1,15 @@
 // gist_list_screen.dart
 
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 import 'package:gist_manager/main.dart';
+import 'package:gist_manager/models/colors.dart';
 import 'package:gist_manager/providers/gist_provider.dart';
-import 'package:gist_manager/providers/hover_change_image.dart';
 import 'package:gist_manager/providers/user_provider.dart';
 import 'package:gist_manager/screens/credentials_dialog.dart';
+import 'package:gist_manager/widgets/filter_popup.dart';
 import 'package:gist_manager/screens/gist_detail_screen.dart';
 import 'package:gist_manager/screens/settings_screen.dart';
 import 'package:gist_manager/widgets/custom_tag.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GistListScreen extends StatefulWidget {
@@ -22,6 +22,7 @@ class GistListScreen extends StatefulWidget {
 class _GistListScreenState extends State<GistListScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _sortAscending = true;
+  String _currentFilter = 'All'; // Add a state variable for the current filter
 
   @override
   void initState() {
@@ -96,24 +97,6 @@ class _GistListScreenState extends State<GistListScreen> {
           'amazon web services'
         ]
       },
-      /*   {
-        'name': 'Programming Languages',
-        'color': Colors.green,
-        'keywords': [
-          'python',
-          '.py',
-          'java',
-          '.java',
-          'dart',
-          'flutter',
-          'rust',
-          '.rs',
-          'c++',
-          '.cpp',
-          'c#',
-          '.cs'
-        ]
-      }, */
       {
         'name': 'Data Science',
         'color': Colors.deepOrange,
@@ -176,6 +159,24 @@ class _GistListScreenState extends State<GistListScreen> {
     return tags;
   }
 
+  void _showFilterPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FilterPopup(
+          currentFilter: _currentFilter,
+          onFilterChanged: (filter) {
+            setState(() {
+              _currentFilter = filter;
+              Provider.of<GistProvider>(context, listen: false)
+                  .filterGists(filter);
+            });
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,9 +191,10 @@ class _GistListScreenState extends State<GistListScreen> {
                   return Center(child: Text(userProvider.errorMessage));
                 } else if (userProvider.user != null) {
                   return ListTile(
-                    leading: HoverChangeImage(
-                        assetImageUrl: 'assets/logo.png',
-                        networkImageUrl: userProvider.user!.avatarUrl),
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(userProvider.user!.avatarUrl),
+                    ),
                     title: Row(
                       children: [
                         Text(userProvider.user!.login),
@@ -206,22 +208,6 @@ class _GistListScreenState extends State<GistListScreen> {
                         ),
                       ],
                     ),
-                    /*   subtitle: GestureDetector(
-                      onTap: () async {
-                        if (await canLaunch(userProvider.user!.htmlUrl)) {
-                          await launch(userProvider.user!.htmlUrl);
-                        } else {
-                          throw 'Could not launch ${userProvider.user!.htmlUrl}';
-                        }
-                      },
-                      child: Text(
-                        userProvider.user!.htmlUrl,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ), */
                   );
                 } else {
                   return const SizedBox.shrink();
@@ -236,7 +222,7 @@ class _GistListScreenState extends State<GistListScreen> {
             onPressed: () {
               Provider.of<GistProvider>(context, listen: false).fetchGists();
               Provider.of<UserProvider>(context, listen: false)
-                  .fetchUserProfile(); // Fetch user profile
+                  .fetchUserProfile();
             },
           ),
           IconButton(
@@ -315,6 +301,24 @@ class _GistListScreenState extends State<GistListScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: _showFilterPopup,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.filter_list),
+                        Text(_currentFilter.toString())
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -359,13 +363,24 @@ class _GistListScreenState extends State<GistListScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      GistDetailScreen(gist: gist)),
+                                builder: (context) =>
+                                    GistDetailScreen(gist: gist),
+                              ),
                             );
                           },
                           child: ListTile(
                             title: Row(
                               children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                                  child: Icon(
+                                    gist.isPublic ? Icons.public : Icons.lock,
+                                    color: gist.isPublic
+                                        ? DraculaPalette.green
+                                        : DraculaPalette.red,
+                                  ),
+                                ),
                                 Expanded(
                                   child: Text(gist.filename.split('.md')[0]),
                                 ),
@@ -385,11 +400,10 @@ class _GistListScreenState extends State<GistListScreen> {
                                 if (gist.filename.split('.md')[0] !=
                                     gist.description.toString())
                                   Text(gist.description ?? ''),
-                                /*   Wrap(
+                                /*  Wrap(
                                   spacing: 8.0,
                                   runSpacing: 4.0,
-                                  children:
-                                      tagList(gist.filename, gist.content),
+                                  children: tagList(gist.filename, gist.content),
                                 ), */
                               ],
                             ),

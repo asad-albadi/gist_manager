@@ -1,9 +1,9 @@
 // gist_provider.dart
 
 import 'package:flutter/material.dart';
+import 'package:gist_manager/models/gist_model.dart';
+import 'package:gist_manager/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/api_service.dart';
-import '../models/gist_model.dart';
 
 class GistProvider with ChangeNotifier {
   List<Gist> _gists = [];
@@ -38,6 +38,7 @@ class GistProvider with ChangeNotifier {
             content: content,
             createdAt: gist.createdAt,
             url: gist.url,
+            isPublic: gist.isPublic,
           );
         }));
         _filteredGists = _gists;
@@ -50,38 +51,6 @@ class GistProvider with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-  }
-
-  Future<void> editGist(String gistId, String filename, String description,
-      String content) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? username = prefs.getString('username');
-    String? token = prefs.getString('token');
-
-    if (username != null && token != null) {
-      await ApiService()
-          .editGist(username, token, gistId, filename, description, content);
-
-      // Find the index of the edited gist
-      int index = _gists.indexWhere((gist) => gist.id == gistId);
-
-      // Update the gist in the list
-      if (index != -1) {
-        _gists[index] = Gist(
-          id: gistId,
-          filename: filename,
-          description: description,
-          content: content,
-          createdAt: _gists[index].createdAt,
-          url: _gists[index].url,
-        );
-        _filteredGists = _gists;
-      }
-
-      notifyListeners();
-    } else {
-      throw Exception('Username or token is missing');
-    }
   }
 
   void searchGists(String query) {
@@ -110,9 +79,53 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void filterGists(String filter) {
+    if (filter == 'All') {
+      _filteredGists = _gists;
+    } else if (filter == 'Public') {
+      _filteredGists = _gists.where((gist) => gist.isPublic).toList();
+    } else if (filter == 'Secret') {
+      _filteredGists = _gists.where((gist) => !gist.isPublic).toList();
+    }
+    notifyListeners();
+  }
+
   Future<void> saveCredentials(String username, String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
     await prefs.setString('token', token);
+  }
+
+  Future<void> editGist(String gistId, String filename, String description,
+      String content) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? token = prefs.getString('token');
+
+    if (username != null && token != null) {
+      await ApiService()
+          .editGist(username, token, gistId, filename, description, content);
+
+      // Find the index of the edited gist
+      int index = _gists.indexWhere((gist) => gist.id == gistId);
+
+      // Update the gist in the list
+      if (index != -1) {
+        _gists[index] = Gist(
+          id: gistId,
+          filename: filename,
+          description: description,
+          content: content,
+          createdAt: _gists[index].createdAt,
+          url: _gists[index].url,
+          isPublic: _gists[index].isPublic,
+        );
+        _filteredGists = _gists;
+      }
+
+      notifyListeners();
+    } else {
+      throw Exception('Username or token is missing');
+    }
   }
 }

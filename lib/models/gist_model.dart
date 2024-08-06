@@ -7,6 +7,7 @@ class Gist {
   final String content;
   final String createdAt;
   final String url;
+  final bool isPublic; // Add this line
 
   Gist({
     required this.id,
@@ -15,6 +16,7 @@ class Gist {
     required this.content,
     required this.createdAt,
     required this.url,
+    required this.isPublic, // Add this line
   });
 
   factory Gist.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class Gist {
       content: json['files'].values.first['content'] ?? 'No content',
       createdAt: json['created_at'] ?? 'Unknown date',
       url: json['html_url'],
+      isPublic: json['public'], // Add this line
     );
   }
 }
