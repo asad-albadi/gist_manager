@@ -3,6 +3,7 @@
 import 'package:gist_manager/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gist_manager/screens/edit_gist_screen.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:flutter/services.dart';
 
@@ -17,20 +18,34 @@ class GistDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Row(
-        children: [
-          SelectableText(
-            gist.filename,
-          ),
+        title: Row(
+          children: [
+            SelectableText(
+              gist.filename,
+            ),
+            IconButton(
+              tooltip: "Click here to go to: ${gist.url}",
+              icon: const Icon(Icons.link, size: 18.0),
+              onPressed: () {
+                launchURL(gist.url);
+              },
+            ),
+          ],
+        ),
+        actions: [
           IconButton(
-            tooltip: "Click here to go to: ${gist.url}",
-            icon: const Icon(Icons.link, size: 18.0),
+            icon: Icon(Icons.edit),
             onPressed: () {
-              launchURL(gist.url);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditGistScreen(gist: gist),
+                ),
+              );
             },
           ),
         ],
-      )),
+      ),
       body: Markdown(
         data: gist.content,
         selectable: true,

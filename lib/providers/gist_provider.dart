@@ -52,6 +52,19 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> editGist(String gistId, String filename, String content) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? token = prefs.getString('token');
+
+    if (username != null && token != null) {
+      await ApiService().editGist(username, token, gistId, filename, content);
+      await fetchGists(); // Refresh the list of gists after editing
+    } else {
+      throw Exception('Username or token is missing');
+    }
+  }
+
   void searchGists(String query) {
     final lowerCaseQuery = query.toLowerCase();
     _filteredGists = _gists

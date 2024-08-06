@@ -27,6 +27,28 @@ class ApiService {
     }
   }
 
+  Future<void> editGist(String username, String token, String gistId,
+      String filename, String content) async {
+    final response = await http.patch(
+      Uri.parse('$baseUrl/gists/$gistId'),
+      headers: {
+        'Authorization': 'token $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'files': {
+          filename: {
+            'content': content,
+          },
+        },
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to edit gist');
+    }
+  }
+
   Future<List<Gist>> fetchAllGists(String username, String token) async {
     int page = 1;
     int perPage = 30;
