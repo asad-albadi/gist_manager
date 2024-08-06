@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gist_manager/main.dart';
+import 'package:gist_manager/screens/edit_gist_screen.dart';
 import 'package:markdown/markdown.dart' as md;
 import '../models/gist_model.dart';
 
 class GistDetailScreen extends StatelessWidget {
   final Gist gist;
 
-  GistDetailScreen({required this.gist});
+  const GistDetailScreen({super.key, required this.gist});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,18 @@ class GistDetailScreen extends StatelessWidget {
               icon: const Icon(Icons.link, size: 18.0),
               onPressed: () {
                 launchURL(gist.url);
+              },
+            ),
+            IconButton(
+              tooltip: "Edit: ${gist.filename} ",
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditGistScreen(gist: gist),
+                  ),
+                );
               },
             ),
           ],
