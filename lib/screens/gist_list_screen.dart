@@ -11,7 +11,6 @@ import 'package:gist_manager/screens/settings_screen.dart';
 import 'package:gist_manager/widgets/custom_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class GistListScreen extends StatefulWidget {
   const GistListScreen({super.key});

@@ -28,7 +28,7 @@ class ApiService {
   }
 
   Future<void> editGist(String username, String token, String gistId,
-      String filename, String content) async {
+      String filename, String description, String content) async {
     final response = await http.patch(
       Uri.parse('$baseUrl/gists/$gistId'),
       headers: {
@@ -36,6 +36,7 @@ class ApiService {
         'Content-Type': 'application/json',
       },
       body: json.encode({
+        'description': description,
         'files': {
           filename: {
             'content': content,

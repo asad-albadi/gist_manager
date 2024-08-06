@@ -17,6 +17,7 @@ class EditGistScreen extends StatefulWidget {
 class _EditGistScreenState extends State<EditGistScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _filenameController;
+  late TextEditingController _descriptionController;
   late TextEditingController _contentController;
   bool _isLoading = false;
 
@@ -24,12 +25,15 @@ class _EditGistScreenState extends State<EditGistScreen> {
   void initState() {
     super.initState();
     _filenameController = TextEditingController(text: widget.gist.filename);
+    _descriptionController =
+        TextEditingController(text: widget.gist.description ?? '');
     _contentController = TextEditingController(text: widget.gist.content);
   }
 
   @override
   void dispose() {
     _filenameController.dispose();
+    _descriptionController.dispose();
     _contentController.dispose();
     super.dispose();
   }
@@ -44,6 +48,7 @@ class _EditGistScreenState extends State<EditGistScreen> {
         await Provider.of<GistProvider>(context, listen: false).editGist(
           widget.gist.id,
           _filenameController.text,
+          _descriptionController.text,
           _contentController.text,
         );
         Navigator.of(context).pop();
@@ -65,7 +70,7 @@ class _EditGistScreenState extends State<EditGistScreen> {
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double availableHeight =
-        screenHeight - 300; // Subtracting approximate height of other widgets
+        screenHeight - 400; // Subtracting approximate height of other widgets
     final int maxLines = (availableHeight / 24)
         .floor(); // Assuming each line is about 24 pixels high
 
@@ -88,6 +93,11 @@ class _EditGistScreenState extends State<EditGistScreen> {
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Description'),
               ),
               const SizedBox(height: 16),
               TextFormField(
