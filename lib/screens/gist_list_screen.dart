@@ -194,8 +194,20 @@ class _GistListScreenState extends State<GistListScreen> {
                     leading: HoverChangeImage(
                         assetImageUrl: 'assets/logo.png',
                         networkImageUrl: userProvider.user!.avatarUrl),
-                    title: Text(userProvider.user!.login),
-                    subtitle: GestureDetector(
+                    title: Row(
+                      children: [
+                        Text(userProvider.user!.login),
+                        IconButton(
+                          tooltip:
+                              "Click here to go to: ${userProvider.user!.htmlUrl}",
+                          icon: const Icon(Icons.link, size: 18.0),
+                          onPressed: () {
+                            launchURL(userProvider.user!.htmlUrl);
+                          },
+                        ),
+                      ],
+                    ),
+                    /*   subtitle: GestureDetector(
                       onTap: () async {
                         if (await canLaunch(userProvider.user!.htmlUrl)) {
                           await launch(userProvider.user!.htmlUrl);
@@ -210,7 +222,7 @@ class _GistListScreenState extends State<GistListScreen> {
                           decoration: TextDecoration.underline,
                         ),
                       ),
-                    ),
+                    ), */
                   );
                 } else {
                   return const SizedBox.shrink();
