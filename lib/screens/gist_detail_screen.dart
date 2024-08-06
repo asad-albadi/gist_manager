@@ -1,12 +1,10 @@
 // gist_detail_screen.dart
 
-import 'package:gist_manager/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:gist_manager/screens/edit_gist_screen.dart';
-import 'package:markdown/markdown.dart' as md;
 import 'package:flutter/services.dart';
-
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:gist_manager/main.dart';
+import 'package:markdown/markdown.dart' as md;
 import '../models/gist_model.dart';
 
 class GistDetailScreen extends StatelessWidget {
@@ -35,19 +33,6 @@ class GistDetailScreen extends StatelessWidget {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditGistScreen(gist: gist),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: Markdown(
         data: gist.content,
@@ -67,6 +52,25 @@ class GistDetailScreen extends StatelessWidget {
             ),
           ),
         ),
+        imageBuilder: (uri, title, alt) {
+          return Image.network(
+            uri.toString(),
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(Icons.error);
+            },
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          (loadingProgress.expectedTotalBytes ?? 1)
+                      : null,
+                ),
+              );
+            },
+          );
+        },
         builders: {
           'code': CodeElementBuilder(context),
         },
