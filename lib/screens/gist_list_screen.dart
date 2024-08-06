@@ -1,5 +1,3 @@
-// gist_list_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:gist_manager/main.dart';
 import 'package:gist_manager/models/colors.dart';
@@ -21,8 +19,10 @@ class GistListScreen extends StatefulWidget {
 
 class _GistListScreenState extends State<GistListScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
   bool _sortAscending = true;
   String _currentFilter = 'All'; // Add a state variable for the current filter
+  bool _isSearchFocused = false;
 
   @override
   void initState() {
@@ -31,6 +31,12 @@ class _GistListScreenState extends State<GistListScreen> {
       Provider.of<GistProvider>(context, listen: false).fetchGists();
       Provider.of<UserProvider>(context, listen: false)
           .fetchUserProfile(); // Fetch user profile
+    });
+
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _isSearchFocused = _searchFocusNode.hasFocus;
+      });
     });
   }
 
@@ -51,112 +57,6 @@ class _GistListScreenState extends State<GistListScreen> {
         );
       },
     );
-  }
-
-  List<Widget> tagList(String filename, String content) {
-    List<Widget> tags = [];
-    List<Map<String, dynamic>> tagCriteria = [
-      {
-        'name': 'Containerization',
-        'color': Colors.blueAccent,
-        'keywords': ['docker', 'k8s', 'kubernetes', 'container']
-      },
-      {
-        'name': 'Game Development',
-        'color': Colors.lightGreen,
-        'keywords': [
-          'godot',
-          'unity3d',
-          'game development',
-        ]
-      },
-      {
-        'name': 'Operating Systems',
-        'color': Colors.amber,
-        'keywords': [
-          'linux',
-          'windows',
-          'macos',
-          'ubuntu',
-          'fedora',
-          'debian',
-          'pop!_os',
-          'archlinux',
-          'arch linux'
-        ]
-      },
-      {
-        'name': 'Cloud Computing',
-        'color': Colors.lightBlueAccent,
-        'keywords': [
-          'cloud',
-          'aws',
-          'azure',
-          'gcp',
-          'google cloud',
-          'amazon web services'
-        ]
-      },
-      {
-        'name': 'Data Science',
-        'color': Colors.deepOrange,
-        'keywords': [
-          'data science',
-          'data analysis',
-          'pandas',
-          'numpy',
-          'machine learning',
-          'artificial intelligence'
-        ]
-      },
-      {
-        'name': 'DevOps',
-        'color': Colors.blueAccent,
-        'keywords': [
-          'devops',
-          'ci/cd',
-          'continuous integration',
-          'continuous deployment'
-        ]
-      },
-      {
-        'name': 'Security',
-        'color': Colors.redAccent,
-        'keywords': ['security', 'cybersecurity', 'infosec']
-      },
-      {
-        'name': 'Networking',
-        'color': Colors.deepPurpleAccent,
-        'keywords': ['networking', 'network', 'tcp/ip', 'dns']
-      },
-      {
-        'name': 'Homelab',
-        'color': Colors.black,
-        'keywords': ['homelab']
-      },
-      {
-        'name': 'IoT',
-        'color': Colors.blueAccent,
-        'keywords': ['home assistant', 'mqtt']
-      },
-      {
-        'name': 'Electronics',
-        'color': Colors.blueAccent,
-        'keywords': ['pcb', 'sensor', 'arduino', '3d print', 'microcontroller']
-      }
-    ];
-
-    for (var tag in tagCriteria) {
-      for (var keyword in tag['keywords']) {
-        if (filename.toLowerCase().contains(keyword) ||
-            content.toLowerCase().contains(keyword)) {
-          tags.add(CustomTag(name: tag['name'], color: tag['color']));
-          break; // Avoid adding the same tag multiple times
-        }
-      }
-    }
-
-    return tags;
   }
 
   void _showFilterPopup() {
@@ -242,6 +142,7 @@ class _GistListScreenState extends State<GistListScreen> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
+                    focusNode: _searchFocusNode,
                     decoration: const InputDecoration(
                       labelText: 'Search',
                       prefixIcon: Icon(Icons.search),
@@ -253,72 +154,74 @@ class _GistListScreenState extends State<GistListScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Provider.of<GistProvider>(context, listen: false)
-                          .sortGistsByFilename(_sortAscending);
-                      _toggleSortOrder();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                if (!_isSearchFocused) ...[
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Provider.of<GistProvider>(context, listen: false)
+                            .sortGistsByFilename(_sortAscending);
+                        _toggleSortOrder();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.text_format),
+                          Icon(_sortAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward)
+                        ],
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.text_format),
-                        Icon(_sortAscending
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward)
-                      ],
-                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Provider.of<GistProvider>(context, listen: false)
-                          .sortGistsByDate(_sortAscending);
-                      _toggleSortOrder();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Provider.of<GistProvider>(context, listen: false)
+                            .sortGistsByDate(_sortAscending);
+                        _toggleSortOrder();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_month),
+                          Icon(_sortAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward)
+                        ],
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.calendar_month),
-                        Icon(_sortAscending
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward)
-                      ],
-                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _showFilterPopup,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: _showFilterPopup,
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.filter_list),
+                          Text(_currentFilter.toString())
+                        ],
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.filter_list),
-                        Text(_currentFilter.toString())
-                      ],
-                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -382,7 +285,10 @@ class _GistListScreenState extends State<GistListScreen> {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Text(gist.filename.split('.md')[0]),
+                                  child: Text(
+                                    gist.filename.split('.md')[0],
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                                 IconButton(
                                   tooltip: "Click here to go to: ${gist.url}",
@@ -391,20 +297,21 @@ class _GistListScreenState extends State<GistListScreen> {
                                     launchURL(gist.url);
                                   },
                                 ),
-                                Text(gist.createdAt),
                               ],
                             ),
-                            subtitle: Column(
+                            subtitle: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 if (gist.filename.split('.md')[0] !=
                                     gist.description.toString())
-                                  Text(gist.description ?? ''),
-                                /*  Wrap(
-                                  spacing: 8.0,
-                                  runSpacing: 4.0,
-                                  children: tagList(gist.filename, gist.content),
-                                ), */
+                                  Expanded(
+                                    child: Text(
+                                      gist.description ?? '',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                const Spacer(),
+                                Text(gist.createdAt),
                               ],
                             ),
                           ),
