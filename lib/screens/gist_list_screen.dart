@@ -385,12 +385,12 @@ class _GistListScreenState extends State<GistListScreen> {
                                 if (gist.filename.split('.md')[0] !=
                                     gist.description.toString())
                                   Text(gist.description ?? ''),
-                                Wrap(
+                                /*   Wrap(
                                   spacing: 8.0,
                                   runSpacing: 4.0,
                                   children:
                                       tagList(gist.filename, gist.content),
-                                ),
+                                ), */
                               ],
                             ),
                           ),
