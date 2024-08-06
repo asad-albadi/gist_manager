@@ -20,8 +20,11 @@ class GistDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            SelectableText(
-              gist.filename,
+            Expanded(
+              child: Text(
+                gist.filename,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             IconButton(
               tooltip: "Click here to go to: ${gist.url}",
