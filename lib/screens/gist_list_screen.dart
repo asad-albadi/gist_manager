@@ -60,17 +60,28 @@ class _GistListScreenState extends State<GistListScreen> {
     );
   }
 
+  String _selectedVisibilityFilter = 'All';
+  String _selectedStarFilter = 'All';
+
   void _showFilterPopup() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return FilterPopup(
-          currentFilter: _currentFilter,
-          onFilterChanged: (filter) {
+          currentVisibilityFilter: _selectedVisibilityFilter,
+          currentStarFilter: _selectedStarFilter,
+          onVisibilityFilterChanged: (newFilter) {
             setState(() {
-              _currentFilter = filter;
+              _selectedVisibilityFilter = newFilter;
               Provider.of<GistProvider>(context, listen: false)
-                  .filterGists(filter);
+                  .setVisibilityFilter(newFilter);
+            });
+          },
+          onStarFilterChanged: (newFilter) {
+            setState(() {
+              _selectedStarFilter = newFilter;
+              Provider.of<GistProvider>(context, listen: false)
+                  .setStarFilter(newFilter);
             });
           },
         );
@@ -227,8 +238,22 @@ class _GistListScreenState extends State<GistListScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.filter_list),
-                          Text(_currentFilter.toString())
+                          /* 
+                          const Icon(Icons.filter_list), */
+
+                          if (_selectedVisibilityFilter.toString() == "All")
+                            const Text("All"),
+                          if (_selectedVisibilityFilter.toString() == "Public")
+                            const Icon(Icons.public),
+                          if (_selectedVisibilityFilter.toString() == "Secret")
+                            const Icon(Icons.lock),
+                          const Text(" | "),
+                          if (_selectedStarFilter.toString() == "All")
+                            const Text("All"),
+                          if (_selectedStarFilter.toString() == "Starred")
+                            const Icon(Icons.star),
+                          if (_selectedStarFilter.toString() == "Unstarred")
+                            const Icon(Icons.star_border),
                         ],
                       ),
                     ),
@@ -301,6 +326,21 @@ class _GistListScreenState extends State<GistListScreen> {
                                     gist.filename.split('.md')[0],
                                     overflow: TextOverflow.ellipsis,
                                   ),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    color: Colors.amber,
+                                    gist.isStarred
+                                        ? Icons.star
+                                        : Icons.star_border,
+                                  ),
+                                  onPressed: () async {
+                                    if (gist.isStarred) {
+                                      await gistProvider.unstarGist(gist.id);
+                                    } else {
+                                      await gistProvider.starGist(gist.id);
+                                    }
+                                  },
                                 ),
                                 IconButton(
                                   tooltip: "Click here to go to: ${gist.url}",

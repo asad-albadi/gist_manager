@@ -1,5 +1,3 @@
-// gist_model.dart
-
 class Gist {
   final String id;
   final String filename;
@@ -7,7 +5,8 @@ class Gist {
   final String content;
   final String createdAt;
   final String url;
-  final bool isPublic; // Add this line
+  final bool isPublic;
+  final bool isStarred;
 
   Gist({
     required this.id,
@@ -16,10 +15,11 @@ class Gist {
     required this.content,
     required this.createdAt,
     required this.url,
-    required this.isPublic, // Add this line
+    required this.isPublic,
+    required this.isStarred,
   });
 
-  factory Gist.fromJson(Map<String, dynamic> json) {
+  factory Gist.fromJson(Map<String, dynamic> json, bool isStarred) {
     return Gist(
       id: json['id'],
       filename: json['files'].values.first['filename'] ?? 'No filename',
@@ -27,7 +27,8 @@ class Gist {
       content: json['files'].values.first['content'] ?? 'No content',
       createdAt: json['created_at'] ?? 'Unknown date',
       url: json['html_url'],
-      isPublic: json['public'], // Add this line
+      isPublic: json['public'],
+      isStarred: isStarred,
     );
   }
 }

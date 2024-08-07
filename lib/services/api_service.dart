@@ -1,5 +1,3 @@
-// api_service.dart
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/gist_model.dart';
@@ -19,11 +17,52 @@ class ApiService {
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
-      return data.map((gist) => Gist.fromJson(gist)).toList();
+      List<Gist> gists = await Future.wait(data.map((gistJson) async {
+        bool isStarred = await isGistStarred(token, gistJson['id']);
+        return Gist.fromJson(gistJson, isStarred);
+      }).toList());
+      return gists;
     } else if (response.statusCode == 401) {
       throw Exception('Failed to load gists, Bad credentials');
     } else {
       throw Exception('Failed to load gists');
+    }
+  }
+
+  Future<bool> isGistStarred(String token, String gistId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/gists/$gistId/star'),
+      headers: {
+        'Authorization': 'token $token',
+      },
+    );
+
+    return response.statusCode == 204;
+  }
+
+  Future<void> starGist(String token, String gistId) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/gists/$gistId/star'),
+      headers: {
+        'Authorization': 'token $token',
+      },
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to star gist');
+    }
+  }
+
+  Future<void> unstarGist(String token, String gistId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/gists/$gistId/star'),
+      headers: {
+        'Authorization': 'token $token',
+      },
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to unstar gist');
     }
   }
 
@@ -48,7 +87,7 @@ class ApiService {
 
     if (response.statusCode == 201) {
       final Map<String, dynamic> data = json.decode(response.body);
-      return Gist.fromJson(data);
+      return Gist.fromJson(data, false); // New gist is not starred by default
     } else {
       throw Exception('Failed to create gist');
     }

@@ -1,5 +1,3 @@
-// gist_provider.dart
-
 import 'package:flutter/material.dart';
 import 'package:gist_manager/models/gist_model.dart';
 import 'package:gist_manager/services/api_service.dart';
@@ -10,6 +8,8 @@ class GistProvider with ChangeNotifier {
   List<Gist> _filteredGists = [];
   bool _isLoading = false;
   String _errorMessage = '';
+  String _visibilityFilter = 'All';
+  String _starFilter = 'All';
 
   List<Gist> get gists => _filteredGists;
   bool get isLoading => _isLoading;
@@ -31,6 +31,7 @@ class GistProvider with ChangeNotifier {
         _gists = await Future.wait(fetchedGists.map((gist) async {
           String content =
               await ApiService().fetchGistContent(username, token, gist.id);
+          bool isStarred = await ApiService().isGistStarred(token, gist.id);
           return Gist(
             id: gist.id,
             filename: gist.filename,
@@ -39,9 +40,10 @@ class GistProvider with ChangeNotifier {
             createdAt: gist.createdAt,
             url: gist.url,
             isPublic: gist.isPublic,
+            isStarred: isStarred,
           );
         }));
-        _filteredGists = _gists;
+        _applyFilters();
       } catch (e) {
         _errorMessage = e.toString();
       }
@@ -53,6 +55,29 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void _applyFilters() {
+    _filteredGists = _gists.where((gist) {
+      bool matchesVisibility = (_visibilityFilter == 'All') ||
+          (_visibilityFilter == 'Public' && gist.isPublic) ||
+          (_visibilityFilter == 'Secret' && !gist.isPublic);
+      bool matchesStar = (_starFilter == 'All') ||
+          (_starFilter == 'Starred' && gist.isStarred) ||
+          (_starFilter == 'Unstarred' && !gist.isStarred);
+      return matchesVisibility && matchesStar;
+    }).toList();
+    notifyListeners();
+  }
+
+  void setVisibilityFilter(String filter) {
+    _visibilityFilter = filter;
+    _applyFilters();
+  }
+
+  void setStarFilter(String filter) {
+    _starFilter = filter;
+    _applyFilters();
+  }
+
   Future<void> deleteGist(String gistId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? username = prefs.getString('username');
@@ -62,8 +87,7 @@ class GistProvider with ChangeNotifier {
       try {
         await ApiService().deleteGist(username, token, gistId);
         _gists.removeWhere((gist) => gist.id == gistId);
-        _filteredGists.removeWhere((gist) => gist.id == gistId);
-        notifyListeners();
+        _applyFilters();
       } catch (e) {
         _errorMessage = e.toString();
         notifyListeners();
@@ -87,8 +111,7 @@ class GistProvider with ChangeNotifier {
         // Check for duplicates before adding
         if (!_gists.any((gist) => gist.id == newGist.id)) {
           _gists.insert(0, newGist);
-          //_filteredGists.insert(0, newGist);
-          notifyListeners();
+          _applyFilters();
         }
       } catch (e) {
         _errorMessage = e.toString();
@@ -125,17 +148,6 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void filterGists(String filter) {
-    if (filter == 'All') {
-      _filteredGists = _gists;
-    } else if (filter == 'Public') {
-      _filteredGists = _gists.where((gist) => gist.isPublic).toList();
-    } else if (filter == 'Secret') {
-      _filteredGists = _gists.where((gist) => !gist.isPublic).toList();
-    }
-    notifyListeners();
-  }
-
   Future<void> saveCredentials(String username, String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
@@ -165,13 +177,65 @@ class GistProvider with ChangeNotifier {
           createdAt: _gists[index].createdAt,
           url: _gists[index].url,
           isPublic: _gists[index].isPublic,
+          isStarred: _gists[index].isStarred,
         );
-        _filteredGists = _gists;
+        _applyFilters();
       }
 
       notifyListeners();
     } else {
       throw Exception('Username or token is missing');
+    }
+  }
+
+  Future<void> starGist(String gistId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    if (token != null) {
+      try {
+        await ApiService().starGist(token, gistId);
+        _updateGistStarStatus(gistId, true);
+      } catch (e) {
+        _errorMessage = e.toString();
+        notifyListeners();
+      }
+    } else {
+      throw Exception('Token is missing');
+    }
+  }
+
+  Future<void> unstarGist(String gistId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('token');
+
+    if (token != null) {
+      try {
+        await ApiService().unstarGist(token, gistId);
+        _updateGistStarStatus(gistId, false);
+      } catch (e) {
+        _errorMessage = e.toString();
+        notifyListeners();
+      }
+    } else {
+      throw Exception('Token is missing');
+    }
+  }
+
+  void _updateGistStarStatus(String gistId, bool isStarred) {
+    int index = _gists.indexWhere((gist) => gist.id == gistId);
+    if (index != -1) {
+      _gists[index] = Gist(
+        id: _gists[index].id,
+        filename: _gists[index].filename,
+        description: _gists[index].description,
+        content: _gists[index].content,
+        createdAt: _gists[index].createdAt,
+        url: _gists[index].url,
+        isPublic: _gists[index].isPublic,
+        isStarred: isStarred,
+      );
+      _applyFilters();
     }
   }
 }
