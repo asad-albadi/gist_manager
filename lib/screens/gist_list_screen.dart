@@ -1,13 +1,15 @@
+// gist_list_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:gist_manager/main.dart';
 import 'package:gist_manager/models/colors.dart';
 import 'package:gist_manager/providers/gist_provider.dart';
 import 'package:gist_manager/providers/user_provider.dart';
+import 'package:gist_manager/screens/create_gist_screen.dart';
 import 'package:gist_manager/screens/credentials_dialog.dart';
-import 'package:gist_manager/widgets/filter_popup.dart';
 import 'package:gist_manager/screens/gist_detail_screen.dart';
 import 'package:gist_manager/screens/settings_screen.dart';
-import 'package:gist_manager/widgets/custom_tag.dart';
+import 'package:gist_manager/widgets/filter_popup.dart';
 import 'package:provider/provider.dart';
 
 class GistListScreen extends StatefulWidget {
@@ -21,7 +23,7 @@ class _GistListScreenState extends State<GistListScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   bool _sortAscending = true;
-  String _currentFilter = 'All'; // Add a state variable for the current filter
+  String _currentFilter = 'All';
   bool _isSearchFocused = false;
 
   @override
@@ -29,8 +31,7 @@ class _GistListScreenState extends State<GistListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GistProvider>(context, listen: false).fetchGists();
-      Provider.of<UserProvider>(context, listen: false)
-          .fetchUserProfile(); // Fetch user profile
+      Provider.of<UserProvider>(context, listen: false).fetchUserProfile();
     });
 
     _searchFocusNode.addListener(() {
@@ -117,6 +118,17 @@ class _GistListScreenState extends State<GistListScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateGistScreen(),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {

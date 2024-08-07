@@ -27,6 +27,33 @@ class ApiService {
     }
   }
 
+  Future<Gist> createGist(String username, String token, String filename,
+      String description, String content, bool isPublic) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/gists'),
+      headers: {
+        'Authorization': 'token $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'description': description,
+        'public': isPublic,
+        'files': {
+          filename: {
+            'content': content,
+          },
+        },
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      return Gist.fromJson(data);
+    } else {
+      throw Exception('Failed to create gist');
+    }
+  }
+
   Future<void> editGist(String username, String token, String gistId,
       String filename, String description, String content) async {
     final response = await http.patch(

@@ -53,6 +53,32 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> createGist(String filename, String description, String content,
+      bool isPublic) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? token = prefs.getString('token');
+
+    if (username != null && token != null) {
+      try {
+        Gist newGist = await ApiService().createGist(
+            username, token, filename, description, content, isPublic);
+
+        // Check for duplicates before adding
+        if (!_gists.any((gist) => gist.id == newGist.id)) {
+          _gists.insert(0, newGist);
+          //_filteredGists.insert(0, newGist);
+          notifyListeners();
+        }
+      } catch (e) {
+        _errorMessage = e.toString();
+        notifyListeners();
+      }
+    } else {
+      throw Exception('Username or token is missing');
+    }
+  }
+
   void searchGists(String query) {
     final lowerCaseQuery = query.toLowerCase();
     _filteredGists = _gists

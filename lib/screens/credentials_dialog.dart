@@ -7,6 +7,7 @@ class CredentialsDialog extends StatefulWidget {
   const CredentialsDialog({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CredentialsDialogState createState() => _CredentialsDialogState();
 }
 
@@ -55,12 +56,15 @@ class _CredentialsDialogState extends State<CredentialsDialog> {
                   );
                   if (usernameController.text.isNotEmpty ||
                       tokenController.text.isNotEmpty) {
+                    // ignore: use_build_context_synchronously
                     await Provider.of<GistProvider>(context, listen: false)
                         .fetchGists();
+                    // ignore: use_build_context_synchronously
                     await Provider.of<UserProvider>(context, listen: false)
                         .fetchUserProfile(); // Fetch user profile
                   }
 
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).pop();
 
                   setState(() {

@@ -8,9 +8,10 @@ import '../providers/gist_provider.dart';
 class EditGistScreen extends StatefulWidget {
   final Gist gist;
 
-  EditGistScreen({required this.gist});
+  const EditGistScreen({super.key, required this.gist});
 
   @override
+  // ignore: library_private_types_in_public_api
   _EditGistScreenState createState() => _EditGistScreenState();
 }
 
@@ -51,8 +52,10 @@ class _EditGistScreenState extends State<EditGistScreen> {
           _descriptionController.text,
           _contentController.text,
         );
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
       } catch (e) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to edit gist: $e'),
