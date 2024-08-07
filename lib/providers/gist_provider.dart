@@ -53,6 +53,26 @@ class GistProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteGist(String gistId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? token = prefs.getString('token');
+
+    if (username != null && token != null) {
+      try {
+        await ApiService().deleteGist(username, token, gistId);
+        _gists.removeWhere((gist) => gist.id == gistId);
+        _filteredGists.removeWhere((gist) => gist.id == gistId);
+        notifyListeners();
+      } catch (e) {
+        _errorMessage = e.toString();
+        notifyListeners();
+      }
+    } else {
+      throw Exception('Username or token is missing');
+    }
+  }
+
   Future<void> createGist(String filename, String description, String content,
       bool isPublic) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

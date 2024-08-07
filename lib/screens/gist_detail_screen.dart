@@ -4,14 +4,81 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gist_manager/main.dart';
+import 'package:gist_manager/providers/gist_provider.dart';
 import 'package:gist_manager/screens/edit_gist_screen.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:provider/provider.dart';
 import '../models/gist_model.dart';
 
 class GistDetailScreen extends StatelessWidget {
   final Gist gist;
 
   const GistDetailScreen({super.key, required this.gist});
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Gist'),
+          content: const Text(
+              'Are you sure you want to delete this gist? This action cannot be undone.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // Red color for the confirmation button
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _confirmDelete(context);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text(
+              'This is your last chance. Do you really want to delete this gist?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary:
+                    Colors.red, // Red color for the final confirmation button
+              ),
+              onPressed: () async {
+                await Provider.of<GistProvider>(context, listen: false)
+                    .deleteGist(gist.id);
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Go back to the previous screen
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +110,13 @@ class GistDetailScreen extends StatelessWidget {
                   ),
                 );
               },
+            ),
+            IconButton(
+              /* style: ElevatedButton.styleFrom(
+                primary: Colors.red, // Red color for the delete button
+              ), */
+              onPressed: () => _showDeleteConfirmation(context),
+              icon: const Icon(Icons.delete),
             ),
           ],
         ),

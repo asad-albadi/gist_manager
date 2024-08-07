@@ -77,6 +77,19 @@ class ApiService {
     }
   }
 
+  Future<void> deleteGist(String username, String token, String gistId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/gists/$gistId'),
+      headers: {
+        'Authorization': 'token $token',
+      },
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete gist');
+    }
+  }
+
   Future<List<Gist>> fetchAllGists(String username, String token) async {
     int page = 1;
     int perPage = 30;
