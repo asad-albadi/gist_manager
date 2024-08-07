@@ -84,41 +84,54 @@ class GistDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                gist.filename,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            IconButton(
-              tooltip: "Click here to go to: ${gist.url}",
-              icon: const Icon(Icons.link, size: 18.0),
-              onPressed: () {
-                launchURL(gist.url);
-              },
-            ),
-            IconButton(
-              tooltip: "Edit: ${gist.filename} ",
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditGistScreen(gist: gist),
+        title: Consumer<GistProvider>(
+          builder: (context, gistProvider, child) {
+            final updatedGist = gistProvider.gists
+                .firstWhere((g) => g.id == gist.id, orElse: () => gist);
+            return Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    updatedGist.filename,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                );
-              },
-            ),
-            IconButton(
-              /* style: ElevatedButton.styleFrom(
+                ),
+                IconButton(
+                  icon: Icon(updatedGist.isPublic ? Icons.lock : Icons.public),
+                  onPressed: () async {
+                    await Provider.of<GistProvider>(context, listen: false)
+                        .toggleGistVisibility(updatedGist);
+                  },
+                ),
+                IconButton(
+                  tooltip: "Click here to go to: ${updatedGist.url}",
+                  icon: const Icon(Icons.link, size: 18.0),
+                  onPressed: () {
+                    launchURL(updatedGist.url);
+                  },
+                ),
+                IconButton(
+                  tooltip: "Edit: ${updatedGist.filename} ",
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditGistScreen(gist: updatedGist),
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
+                  /* style: ElevatedButton.styleFrom(
                 primary: Colors.red, // Red color for the delete button
               ), */
-              onPressed: () => _showDeleteConfirmation(context),
-              icon: const Icon(Icons.delete),
-            ),
-          ],
+                  onPressed: () => _showDeleteConfirmation(context),
+                  icon: const Icon(Icons.delete),
+                ),
+              ],
+            );
+          },
         ),
       ),
       body: Markdown(

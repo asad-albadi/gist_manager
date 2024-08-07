@@ -31,4 +31,26 @@ class Gist {
       isStarred: isStarred,
     );
   }
+
+  Gist copyWith({
+    String? id,
+    String? filename,
+    String? description,
+    String? content,
+    String? createdAt,
+    String? url,
+    bool? isPublic,
+    bool? isStarred,
+  }) {
+    return Gist(
+      id: id ?? this.id,
+      filename: filename ?? this.filename,
+      description: description ?? this.description,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      url: url ?? this.url,
+      isPublic: isPublic ?? this.isPublic,
+      isStarred: isStarred ?? this.isStarred,
+    );
+  }
 }

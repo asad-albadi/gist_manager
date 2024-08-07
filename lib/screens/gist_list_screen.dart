@@ -363,7 +363,7 @@ class _GistListScreenState extends State<GistListScreen> {
                                     ),
                                   ),
                                 const Spacer(),
-                                Text(gist.createdAt),
+                                Text(gist.createdAt.toString()),
                               ],
                             ),
                           ),

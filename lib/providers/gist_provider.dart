@@ -188,6 +188,29 @@ class GistProvider with ChangeNotifier {
     }
   }
 
+  Future<void> toggleGistVisibility(Gist gist) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    String? token = prefs.getString('token');
+
+    if (username != null && token != null) {
+      try {
+        await ApiService().toggleGistVisibility(username, token, gist);
+        int index = _gists.indexWhere((g) => g.id == gist.id);
+        if (index != -1) {
+          _gists[index] = gist.copyWith(isPublic: !gist.isPublic);
+          _applyFilters();
+          notifyListeners();
+        }
+      } catch (e) {
+        _errorMessage = e.toString();
+        notifyListeners();
+      }
+    } else {
+      throw Exception('Username or token is missing');
+    }
+  }
+
   Future<void> starGist(String gistId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');

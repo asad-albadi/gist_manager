@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/gist_model.dart';
-import '../models/user_model.dart'; // Import the user model
+import '../models/user_model.dart';
 
 class ApiService {
   final String baseUrl = "https://api.github.com";
@@ -113,6 +113,30 @@ class ApiService {
 
     if (response.statusCode != 200) {
       throw Exception('Failed to edit gist');
+    }
+  }
+
+  Future<void> toggleGistVisibility(
+      String username, String token, Gist gist) async {
+    final response = await http.patch(
+      Uri.parse('$baseUrl/gists/${gist.id}'),
+      headers: {
+        'Authorization': 'token $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'description': gist.description,
+        'public': !gist.isPublic,
+        'files': {
+          gist.filename: {
+            'content': gist.content,
+          },
+        },
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to toggle gist visibility');
     }
   }
 
