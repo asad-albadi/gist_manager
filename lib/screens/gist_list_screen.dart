@@ -16,6 +16,7 @@ class GistListScreen extends StatefulWidget {
   const GistListScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _GistListScreenState createState() => _GistListScreenState();
 }
 
@@ -23,7 +24,6 @@ class _GistListScreenState extends State<GistListScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   bool _sortAscending = true;
-  String _currentFilter = 'All';
   bool _isSearchFocused = false;
 
   @override
@@ -130,7 +130,7 @@ class _GistListScreenState extends State<GistListScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,

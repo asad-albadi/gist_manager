@@ -28,6 +28,101 @@ class LightDraculaPalette {
   static const Color yellow = Color(0xFFFFD700);
 }
 
+const Map<String, TextStyle> darkThemeMap = {
+  'root': TextStyle(
+      backgroundColor: DraculaPalette.background,
+      color: DraculaPalette.foreground),
+  'keyword': TextStyle(color: DraculaPalette.pink, fontWeight: FontWeight.bold),
+  'built_in': TextStyle(color: DraculaPalette.cyan),
+  'type': TextStyle(color: DraculaPalette.orange),
+  'literal': TextStyle(color: DraculaPalette.cyan),
+  'number': TextStyle(color: DraculaPalette.purple),
+  'operator': TextStyle(color: DraculaPalette.pink),
+  'punctuation': TextStyle(color: DraculaPalette.foreground),
+  'selector-id': TextStyle(color: DraculaPalette.pink),
+  'selector-class': TextStyle(color: DraculaPalette.pink),
+  'variable': TextStyle(color: DraculaPalette.red),
+  'template-variable': TextStyle(color: DraculaPalette.red),
+  'string': TextStyle(color: DraculaPalette.yellow),
+  'comment': TextStyle(color: DraculaPalette.comment),
+  'doctag': TextStyle(color: DraculaPalette.comment),
+  'meta': TextStyle(color: DraculaPalette.orange),
+  'attr': TextStyle(color: DraculaPalette.green),
+  'attribute': TextStyle(color: DraculaPalette.green),
+  'namespace': TextStyle(color: DraculaPalette.cyan),
+  'params': TextStyle(color: DraculaPalette.orange),
+  'tag': TextStyle(color: DraculaPalette.pink),
+  'name': TextStyle(color: DraculaPalette.pink),
+  'builtin-name': TextStyle(color: DraculaPalette.orange),
+  'type-name': TextStyle(color: DraculaPalette.pink),
+  'attr-name': TextStyle(color: DraculaPalette.green),
+  'property': TextStyle(color: DraculaPalette.green),
+  'class title':
+      TextStyle(color: DraculaPalette.pink, fontWeight: FontWeight.bold),
+  'title': TextStyle(color: DraculaPalette.pink, fontWeight: FontWeight.bold),
+  'section': TextStyle(color: DraculaPalette.pink, fontWeight: FontWeight.bold),
+  'subsection':
+      TextStyle(color: DraculaPalette.pink, fontWeight: FontWeight.bold),
+  'bullet': TextStyle(color: DraculaPalette.yellow),
+  'emphasis': TextStyle(fontStyle: FontStyle.italic),
+  'strong': TextStyle(fontWeight: FontWeight.bold),
+  'formula': TextStyle(color: DraculaPalette.pink),
+  'link': TextStyle(color: DraculaPalette.cyan),
+  'quote': TextStyle(color: DraculaPalette.comment),
+  'blockquote': TextStyle(color: DraculaPalette.comment),
+  'deletion': TextStyle(color: DraculaPalette.red),
+  'addition': TextStyle(color: DraculaPalette.green),
+};
+
+const Map<String, TextStyle> lightThemeMap = {
+  'root': TextStyle(
+      backgroundColor: LightDraculaPalette.background,
+      color: LightDraculaPalette.foreground),
+  'keyword':
+      TextStyle(color: LightDraculaPalette.pink, fontWeight: FontWeight.bold),
+  'built_in': TextStyle(color: LightDraculaPalette.cyan),
+  'type': TextStyle(color: LightDraculaPalette.orange),
+  'literal': TextStyle(color: LightDraculaPalette.cyan),
+  'number': TextStyle(color: LightDraculaPalette.purple),
+  'operator': TextStyle(color: LightDraculaPalette.pink),
+  'punctuation': TextStyle(color: LightDraculaPalette.foreground),
+  'selector-id': TextStyle(color: LightDraculaPalette.pink),
+  'selector-class': TextStyle(color: LightDraculaPalette.pink),
+  'variable': TextStyle(color: LightDraculaPalette.red),
+  'template-variable': TextStyle(color: LightDraculaPalette.red),
+  'string': TextStyle(color: LightDraculaPalette.yellow),
+  'comment': TextStyle(color: LightDraculaPalette.comment),
+  'doctag': TextStyle(color: LightDraculaPalette.comment),
+  'meta': TextStyle(color: LightDraculaPalette.orange),
+  'attr': TextStyle(color: LightDraculaPalette.green),
+  'attribute': TextStyle(color: LightDraculaPalette.green),
+  'namespace': TextStyle(color: LightDraculaPalette.cyan),
+  'params': TextStyle(color: LightDraculaPalette.orange),
+  'tag': TextStyle(color: LightDraculaPalette.pink),
+  'name': TextStyle(color: LightDraculaPalette.pink),
+  'builtin-name': TextStyle(color: LightDraculaPalette.orange),
+  'type-name': TextStyle(color: LightDraculaPalette.pink),
+  'attr-name': TextStyle(color: LightDraculaPalette.green),
+  'property': TextStyle(color: LightDraculaPalette.green),
+  'class title':
+      TextStyle(color: LightDraculaPalette.pink, fontWeight: FontWeight.bold),
+  'title':
+      TextStyle(color: LightDraculaPalette.pink, fontWeight: FontWeight.bold),
+  'section':
+      TextStyle(color: LightDraculaPalette.pink, fontWeight: FontWeight.bold),
+  'subsection':
+      TextStyle(color: LightDraculaPalette.pink, fontWeight: FontWeight.bold),
+  'bullet': TextStyle(color: LightDraculaPalette.yellow),
+  'emphasis': TextStyle(fontStyle: FontStyle.italic),
+  'strong': TextStyle(fontWeight: FontWeight.bold),
+  'formula': TextStyle(color: LightDraculaPalette.pink),
+  'link': TextStyle(color: LightDraculaPalette.cyan),
+  'quote': TextStyle(color: LightDraculaPalette.comment),
+  'blockquote': TextStyle(color: LightDraculaPalette.comment),
+  'deletion': TextStyle(color: LightDraculaPalette.red),
+  'addition': TextStyle(color: LightDraculaPalette.green),
+};
+
 final ThemeData darkTheme = ThemeData(
   cardTheme: const CardTheme(elevation: 10),
   brightness: Brightness.dark,
